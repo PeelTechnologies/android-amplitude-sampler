@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.powermock.api.mockito.PowerMockito;
@@ -288,21 +287,6 @@ public final class AmplitudeClientMock extends AmplitudeClient {
     }
 
     @Override
-    public JSONObject truncate(JSONObject object) {
-        return null;
-    }
-
-    @Override
-    public JSONArray truncate(JSONArray array) {
-        return null;
-    }
-
-    @Override
-    public String truncate(String value) {
-        return null;
-    }
-
-    @Override
     public String getUserId() {
         return null;
     }
@@ -338,12 +322,6 @@ public final class AmplitudeClientMock extends AmplitudeClient {
     }
 
     @Override
-    protected Pair<Pair<Long, Long>, JSONArray> mergeEventsAndIdentifys(List<JSONObject> events,
-        List<JSONObject> identifys, long numEvents) {
-        return null;
-    }
-
-    @Override
     protected void makeEventUploadPostRequest(OkHttpClient client, String events, long maxEventId, long maxIdentifyId) {
         // do nothing
     }
@@ -359,23 +337,8 @@ public final class AmplitudeClientMock extends AmplitudeClient {
     }
 
     @Override
-    protected Object replaceWithJSONNull(Object obj) {
-        return null;
-    }
-
-    @Override
     protected synchronized boolean contextAndApiKeySet(String methodName) {
         return false;
-    }
-
-    @Override
-    protected String bytesToHexString(byte[] bytes) {
-        return null;
-    }
-
-    @Override
-    protected long getCurrentTimeMillis() {
-        return -1;
     }
 
     /**

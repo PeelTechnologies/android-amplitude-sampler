@@ -37,10 +37,8 @@ import android.util.Log;
 public class AmplitudeAnalytics {
     private static final String LOG_TAG = AmplitudeAnalytics.class.getName();
 
-    private static final TypedKey<String> AMPLITUDE_PROJECT_ID = new TypedKey<>("amplitudeProjectId", String.class);
-
-    private volatile boolean initialized = false;
     private final int samplingRatio;
+    private final TypedKey<String> amplitudeProjectIdKey;
 
     /**
      * Create an Amplitude instance per specified sampling ratio. Ensure {@link SharedPrefs} is
@@ -48,34 +46,45 @@ public class AmplitudeAnalytics {
      *
      * @param app the Android application instance
      * @param amplitudeProjectId the Amplitude project ID to use if the user is selected for sending data to Amplitude
-     * @param samplingRatio the ratio that needs to be maintained while sampling users. 
+     * @param samplingRatio the ratio that needs to be maintained while sampling users.
      * For example 100 means that the user has 1:100 chance of getting chosen in Amplitude.
      */
     public AmplitudeAnalytics(Application app, String amplitudeProjectId, int samplingRatio) {
+        this(app, amplitudeProjectId, samplingRatio, new TypedKey<>("amplitudeProjectId", String.class));
+    }
+
+    /**
+     * Create an Amplitude instance per specified sampling ratio. Ensure {@link SharedPrefs} is
+     * initialized before this constructor is called.
+     *
+     * @param app the Android application instance
+     * @param amplitudeProjectId the Amplitude project ID to use if the user is selected for sending data to Amplitude
+     * @param samplingRatio the ratio that needs to be maintained while sampling users.
+     * For example 100 means that the user has 1:100 chance of getting chosen in Amplitude.
+     * @param amplitudeProjectIdKey the key to store amplitude project ID
+     */
+    public AmplitudeAnalytics(Application app, String amplitudeProjectId, int samplingRatio, TypedKey<String> amplitudeProjectIdKey) {
         this.samplingRatio  = samplingRatio;
+        this.amplitudeProjectIdKey = amplitudeProjectIdKey;
 
         if (!selected()) return;
         try {
-            if (!initialized) {
-                SharedPrefs.put(AMPLITUDE_PROJECT_ID, amplitudeProjectId);
-                Amplitude.getInstance()
-                        .initialize(app.getApplicationContext(), amplitudeProjectId)
-                        .enableForegroundTracking(app);
-                initialized = true;
-            }
+            SharedPrefs.put(amplitudeProjectIdKey, amplitudeProjectId);
+            Amplitude.getInstance()
+            .initialize(app.getApplicationContext(), amplitudeProjectId)
+            .enableForegroundTracking(app);
         } catch (Exception e) {
             Log.e(LOG_TAG, LOG_TAG, e);
-            initialized = false;
         }
     }
 
     synchronized boolean selected() {
         Boolean selected = null;
-        if (SharedPrefs.contains(AMPLITUDE_PROJECT_ID)) {
+        if (SharedPrefs.contains(amplitudeProjectIdKey)) {
             selected = Boolean.TRUE; // already in Amplitude
         }
         
-        if (selected == null) {
+        if (selected == null) { // check if selection has been made already or not
             TypedKey<Boolean> selectedKey = new TypedKey<>("amplitude_selected", Boolean.class);
             if (SharedPrefs.contains(selectedKey)) { // since SharedPrefs return false if not present, so need to check with contains
                 selected = SharedPrefs.get(selectedKey);
