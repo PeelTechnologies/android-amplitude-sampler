@@ -67,7 +67,7 @@ public class AmplitudeAnalytics {
         this.samplingRatio  = samplingRatio;
         this.amplitudeProjectIdKey = amplitudeProjectIdKey;
 
-        if (!selected()) return;
+        if (!isSelected()) return;
         try {
             SharedPrefs.put(amplitudeProjectIdKey, amplitudeProjectId);
             Amplitude.getInstance()
@@ -78,13 +78,12 @@ public class AmplitudeAnalytics {
         }
     }
 
-    synchronized boolean selected() {
+    public synchronized boolean isSelected() {
         Boolean selected = null;
         if (SharedPrefs.contains(amplitudeProjectIdKey)) {
             selected = Boolean.TRUE; // already in Amplitude
         }
-        
-        if (selected == null) { // check if selection has been made already or not
+        if (selected == null) { // check if selection has already been made or not
             TypedKey<Boolean> selectedKey = new TypedKey<>("amplitude_selected", Boolean.class);
             if (SharedPrefs.contains(selectedKey)) { // since SharedPrefs return false if not present, so need to check with contains
                 selected = SharedPrefs.get(selectedKey);
@@ -110,7 +109,7 @@ public class AmplitudeAnalytics {
     }
 
     public void setUserProperty(String name, String value) {
-        if (!selected()) return;
+        if (!isSelected()) return;
         try {
             JSONObject prop = new JSONObject();
             prop.put(name, value);
@@ -121,7 +120,7 @@ public class AmplitudeAnalytics {
     }
 
     public void setUserProperties(JSONObject properties) {
-        if (!selected()) return;
+        if (!isSelected()) return;
         Amplitude.getInstance().setUserProperties(properties);
     }
 
@@ -131,7 +130,7 @@ public class AmplitudeAnalytics {
     }
 
     public void logEvent(String eventName) {
-        if (!selected()) return;
+        if (!isSelected()) return;
         Amplitude.getInstance().logEvent(eventName);
     }
 
@@ -141,7 +140,7 @@ public class AmplitudeAnalytics {
     }
 
     public void logEvent(String eventName, JSONObject params) {
-        if (!selected()) return;
+        if (!isSelected()) return;
         Amplitude.getInstance().logEvent(eventName, params);
     }
 }

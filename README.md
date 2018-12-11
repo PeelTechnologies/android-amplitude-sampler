@@ -15,4 +15,4 @@ amplitude.logEvent("MY_EVENT_NAME");
         maven { url "https://jitpack.io" }
     }
 ```
-* In your app build.gradle, add:  ```implementation "com.github.PeelTechnologies:android-amplitude-sampler:1.0.0"```
+* In your app build.gradle, add:  ```implementation "com.github.PeelTechnologies:android-amplitude-sampler:1.0.2"```

@@ -59,13 +59,13 @@ public class AmplitudeAnalyticsTest {
     public void testAmplitudeSelected() {
         // set a 100% success coin toss
         AmplitudeAnalytics analytics = new AmplitudeAnalytics(app, "abc123", 1);
-        assertTrue(analytics.selected());
+        assertTrue(analytics.isSelected());
     }
 
     @Test
     public void testSkipAmplitude() {
         // set a very low probability of coin toss to ensure this test passes
         AmplitudeAnalytics analytics = new AmplitudeAnalytics(app, "abc123", 10000);
-        assertFalse(analytics.selected());
+        assertFalse(analytics.isSelected());
     }
 }
